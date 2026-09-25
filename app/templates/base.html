@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Copa Mundial 2027{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="telefono" data-theme="{{ session.get('tema', 'oscuro') }}">
+
+    {% if mostrar_topbar | default(true) %}
+    <div class="topbar">
+      <h1>{% block titulo_barra %}Copa Mundial 2027{% endblock %}</h1>
+      <a href="{{ url_for('extras.ajustes') }}">🔔</a>
+    </div>
+    {% endif %}
+
+    <div class="contenido">
+      {% with mensajes = get_flashed_messages() %}
+        {% if mensajes %}
+          {% for m in mensajes %}
+            <div class="mensaje-flash">{{ m }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      {% block contenido %}{% endblock %}
+    </div>
+
+    {% if mostrar_navbar | default(true) %}
+    <div class="navbar">
+      <a href="{{ url_for('main.inicio') }}" class="{{ 'activo' if request.endpoint == 'main.inicio' else '' }}">
+        <span class="icono">🏠</span>Inicio
+      </a>
+      <a href="{{ url_for('content.partidos') }}" class="{{ 'activo' if request.endpoint == 'content.partidos' else '' }}">
+        <span class="icono">⚽</span>Partidos
+      </a>
+      <a href="{{ url_for('content.selecciones') }}" class="{{ 'activo' if request.endpoint == 'content.selecciones' else '' }}">
+        <span class="icono">🌎</span>Selecciones
+      </a>
+      <a href="{{ url_for('extras.ajustes') }}" class="{{ 'activo' if request.endpoint == 'extras.ajustes' else '' }}">
+        <span class="icono">☰</span>Mas
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</body>
+</html>

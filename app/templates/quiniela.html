@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Mi Quiniela{% endblock %}
+{% block contenido %}
+
+<div class="countdown-card" style="text-align:center;">
+  <div class="countdown-titulo">Puntos acumulados</div>
+  <div style="font-size:38px; font-weight:900; color:var(--dorado);">{{ puntos_totales }}</div>
+  <p class="texto-tenue" style="font-size:12px; margin:4px 0 0;">{{ total_predicciones }} pronosticos hechos</p>
+</div>
+
+<div class="card">
+  <h3>🏅 Insignias</h3>
+  <div class="grid-3">
+    {% for i in insignias_ganadas %}
+    <div class="texto-centro" style="padding:10px 4px; background:rgba(244,197,66,0.1); border-radius:12px; border:1px solid var(--dorado);">
+      <div style="font-size:24px;">{{ i.icono }}</div>
+      <div style="font-size:10px; margin-top:4px;">{{ i.nombre }}</div>
+    </div>
+    {% endfor %}
+    {% for i in insignias_faltantes %}
+    <div class="texto-centro" style="padding:10px 4px; background:var(--azul-medio); border-radius:12px; border:1px solid var(--azul-borde); opacity:0.5;">
+      <div style="font-size:24px;">🔒</div>
+      <div style="font-size:10px; margin-top:4px;">{{ i.nombre }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="card">
+  <h3>Como se ganan los puntos</h3>
+  <table>
+    <tr><td>🎯 Marcador exacto</td><td style="text-align:right; color:var(--dorado); font-weight:700;">3 pts</td></tr>
+    <tr><td>✅ Acertaste el ganador/empate</td><td style="text-align:right; color:var(--verde); font-weight:700;">1 pt</td></tr>
+    <tr><td>❌ Fallaste</td><td style="text-align:right; color:var(--texto-tenue);">0 pts</td></tr>
+  </table>
+</div>
+
+<h3 style="margin: 20px 2px 8px;">Mis pronosticos</h3>
+{% for f in filas %}
+<div class="partido-card">
+  <div class="partido-equipos">
+    <div class="partido-equipo">
+      <span class="bandera">{{ f.partido.get('bandera_local','🏳️') }}</span>
+      <span class="nombre">{{ f.partido.local }}</span>
+    </div>
+    <div class="partido-vs">Tu: {{ f.prediccion }}</div>
+    <div class="partido-equipo">
+      <span class="bandera">{{ f.partido.get('bandera_visitante','🏳️') }}</span>
+      <span class="nombre">{{ f.partido.visitante }}</span>
+    </div>
+  </div>
+  <p class="partido-meta">
+    {% if f.jugado %}
+      Resultado real: {{ f.partido.marcador }} ·
+      {% if f.puntos == 3 %}<span style="color:var(--dorado); font-weight:700;">¡Exacto! +3 pts</span>
+      {% elif f.puntos == 1 %}<span style="color:var(--verde); font-weight:700;">Acertaste el resultado, +1 pt</span>
+      {% else %}<span class="texto-tenue">Sin puntos esta vez</span>{% endif %}
+    {% else %}
+      <span class="texto-tenue">Partido pendiente de jugarse</span>
+    {% endif %}
+  </p>
+</div>
+{% else %}
+<p class="texto-tenue">Todavia no has hecho ningun pronostico. Ve a la pantalla de Partidos y elige un marcador para cada juego.</p>
+{% endfor %}
+
+<a class="btn btn-secundario" href="{{ url_for('content.partidos') }}">← Ver partidos</a>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% set mostrar_topbar = false %}
+{% set mostrar_navbar = false %}
+{% block contenido %}
+<div class="hero-auth chico" style="margin:-16px -16px 22px -16px;">
+  <div class="balon" style="font-size:34px;">🏆</div>
+  <h1>FIFA WORLD CUP 2027</h1>
+  <p style="margin-top:14px; font-weight:700; font-size:16px; color:var(--texto);">Crear cuenta</p>
+  <p>Unete a la experiencia del Mundial</p>
+</div>
+
+{% with mensajes = get_flashed_messages() %}
+  {% if mensajes %}{% for m in mensajes %}<div class="mensaje-flash" style="margin:0 0 14px;">{{ m }}</div>{% endfor %}{% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('auth.registrarse') }}">
+  <div class="campo campo-icono"><label>Nombre completo</label><span>👤</span><input type="text" name="nombre" required></div>
+  <div class="campo campo-icono"><label>Correo electronico</label><span>✉️</span><input type="email" name="correo" required></div>
+  <div class="campo campo-icono"><label>Usuario</label><span>🪪</span><input type="text" name="usuario" required></div>
+  <div class="campo campo-icono"><label>Contraseña</label><span>🔒</span><input type="password" name="contrasena" required></div>
+  <div class="campo campo-icono"><label>Confirmar contraseña</label><span>🔒</span><input type="password" name="confirmar_contrasena" required></div>
+  <div class="campo campo-icono"><label>Fecha de nacimiento</label><span>📅</span><input type="date" name="fecha_nacimiento" required></div>
+  <button class="btn btn-verde" type="submit">Crear cuenta</button>
+</form>
+
+<p class="enlace-tenue">¿Ya tienes cuenta? <a href="{{ url_for('auth.login') }}">Inicia sesion</a></p>
+{% endblock %}

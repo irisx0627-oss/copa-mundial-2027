@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Tema{% endblock %}
+{% block contenido %}
+
+<div class="card" style="padding:6px 16px;">
+  <form method="POST" action="{{ url_for('extras.tema') }}">
+    <label class="fila" style="cursor:pointer;">
+      <div class="fila-izq">🌙 <span style="margin-left:8px;">Oscuro</span></div>
+      <input type="radio" name="tema" value="oscuro" {{ 'checked' if tema_actual=='oscuro' }} onchange="this.form.submit()">
+    </label>
+    <label class="fila" style="cursor:pointer;">
+      <div class="fila-izq">☀️ <span style="margin-left:8px;">Claro</span></div>
+      <input type="radio" name="tema" value="claro" {{ 'checked' if tema_actual=='claro' }} onchange="this.form.submit()">
+    </label>
+  </form>
+</div>
+<p class="texto-tenue texto-centro" style="font-size:12px;">El cambio se aplica al instante y se recuerda la proxima vez que entres.</p>
+
+<a class="btn btn-secundario" href="{{ url_for('extras.ajustes') }}">← Volver a Ajustes</a>
+
+{% endblock %}

@@ -1,0 +1,409 @@
+:root {
+  --azul-noche: #0a1330;
+  --azul-oscuro: #0d1938;
+  --azul-medio: #142449;
+  --azul-tarjeta: #16244c;
+  --azul-borde: #253a6e;
+  --azul-boton: #2f6fed;
+  --azul-boton2: #1e56c9;
+  --dorado: #f4c542;
+  --verde: #22c55e;
+  --verde2: #16a34a;
+  --rojo: #ef4444;
+  --morado: #7c3aed;
+  --rosa: #ec4899;
+  --texto: #f3f5fc;
+  --texto-tenue: #90a0c9;
+  --radio: 16px;
+}
+
+/* ---- Tema claro (se activa con data-theme="claro" en .telefono) ---- */
+.telefono[data-theme="claro"] {
+  --azul-noche: #eef1fb;
+  --azul-oscuro: #ffffff;
+  --azul-medio: #f2f4fb;
+  --azul-tarjeta: #ffffff;
+  --azul-borde: #dbe1f3;
+  --texto: #101830;
+  --texto-tenue: #5b6480;
+}
+.telefono[data-theme="claro"] { background: var(--azul-noche); box-shadow: 0 0 40px rgba(0,0,0,0.12); }
+.telefono[data-theme="claro"] .card,
+.telefono[data-theme="claro"] .partido-card,
+.telefono[data-theme="claro"] .ciudad-card,
+.telefono[data-theme="claro"] .countdown-card {
+  box-shadow: 0 2px 10px rgba(20,36,73,0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #000;
+  color: var(--texto);
+}
+
+.telefono {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--azul-noche);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 76px;
+  position: relative;
+  box-shadow: 0 0 60px rgba(0,0,0,0.6);
+}
+
+/* ---- Encabezado superior (pantallas internas) ---- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #16244c 0%, #0d1938 100%);
+  border-bottom: 1px solid var(--azul-borde);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.topbar h1 {
+  font-size: 17px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+.topbar a { color: var(--texto); text-decoration: none; font-size: 18px; }
+
+/* ---- Contenido ---- */
+.contenido { padding: 16px; flex: 1; }
+
+/* ---- Tarjetas ---- */
+.card {
+  background: linear-gradient(160deg, var(--azul-tarjeta) 0%, #101d40 100%);
+  border: 1px solid var(--azul-borde);
+  border-radius: var(--radio);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.card h3 { margin-top: 0; font-size: 15px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+/* ---- Botones ---- */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--azul-boton) 0%, var(--azul-boton2) 100%);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(47,111,237,0.35);
+}
+.btn-secundario { background: var(--azul-medio); border: 1px solid var(--azul-borde); color: var(--texto); box-shadow: none; }
+.btn-dorado { background: linear-gradient(135deg, #f7d774 0%, var(--dorado) 100%); color: #1a1400; box-shadow: 0 6px 16px rgba(244,197,66,0.3); }
+.btn-verde { background: linear-gradient(135deg, #34d874 0%, var(--verde2) 100%); color: #06210f; box-shadow: 0 6px 16px rgba(34,197,94,0.3); }
+
+/* ---- Formularios ---- */
+.campo { margin-bottom: 14px; }
+.campo label { display: block; font-size: 13px; color: var(--texto-tenue); margin-bottom: 6px; font-weight: 600; }
+.campo input, .campo select {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--azul-borde);
+  background: var(--azul-medio);
+  color: var(--texto);
+  font-size: 14px;
+}
+.campo input:focus, .campo select:focus { outline: none; border-color: var(--azul-boton); }
+.campo-icono { position: relative; }
+.campo-icono span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); opacity: 0.6; }
+.campo-icono input { padding-left: 38px; }
+
+/* ---- Pantallas de login/registro/recuperar: hero con degradado ---- */
+.hero-auth {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(212,175,55,0.25), transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(124,58,237,0.35), transparent 50%),
+    linear-gradient(180deg, #0d1938 0%, #0a1330 100%);
+  padding: 40px 24px 26px;
+  text-align: center;
+  border-bottom: 1px solid var(--azul-borde);
+}
+.hero-auth .balon { font-size: 46px; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5)); }
+.hero-auth h1 {
+  margin: 14px 0 2px;
+  font-size: 24px;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #ffffff, var(--dorado));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-auth .subtitulo { color: var(--dorado); font-size: 12px; letter-spacing: 2px; font-weight: 700; margin: 2px 0; }
+.hero-auth p { color: var(--texto-tenue); font-size: 13px; margin: 10px 0 0; }
+.hero-auth.chico { padding: 26px 24px 20px; }
+.hero-auth.chico h1 { font-size: 19px; -webkit-text-fill-color: var(--texto); background: none; }
+
+.enlace-tenue { color: var(--texto-tenue); font-size: 13px; text-align: center; display: block; margin-top: 14px; }
+.enlace-tenue a { color: var(--azul-boton); text-decoration: none; font-weight: 600; }
+
+.mensaje-flash {
+  background: rgba(244,197,66,0.12);
+  border: 1px solid var(--dorado);
+  color: var(--dorado);
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin: 14px 16px 0;
+  font-size: 13px;
+}
+
+/* ---- Countdown (Inicio) ---- */
+.countdown-card {
+  background: radial-gradient(circle at 20% 0%, rgba(124,58,237,0.4), transparent 55%),
+              linear-gradient(160deg, #1a1f5c 0%, #0d1244 100%);
+  border-radius: var(--radio);
+  padding: 18px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  position: relative;
+}
+.countdown-titulo { font-size: 12px; color: var(--texto-tenue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.countdown-numeros { display: flex; gap: 10px; }
+.countdown-bloque {
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 8px 4px;
+  text-align: center;
+}
+.countdown-bloque .num { font-size: 20px; font-weight: 800; }
+.countdown-bloque .etq { font-size: 10px; color: var(--texto-tenue); }
+
+/* ---- Tarjeta de partido tipo mockup ---- */
+.partido-card {
+  background: linear-gradient(160deg, var(--azul-tarjeta) 0%, #101d40 100%);
+  border: 1px solid var(--azul-borde);
+  border-radius: var(--radio);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.partido-equipos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.partido-equipo { flex: 1; text-align: center; }
+.partido-equipo .bandera { font-size: 30px; display: block; margin-bottom: 4px; }
+.partido-equipo .nombre { font-size: 12px; color: var(--texto); font-weight: 600; }
+
+/* ---- Imagenes reales de bandera (reemplazan al emoji, que en Windows no se
+   dibuja como bandera). Se usan varios tamanos segun donde aparezcan. ---- */
+.bandera-img {
+  display: inline-block;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.12);
+  vertical-align: middle;
+  object-fit: cover;
+}
+.bandera-img-sm { width: 22px; height: 16px; }
+.bandera-img-md { width: 28px; height: 20px; }
+.bandera-img-lg {
+  width: 44px; height: 32px;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto 6px;
+}
+.bandera-img-xl {
+  width: 64px; height: 46px;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
+}
+.partido-vs {
+  background: var(--azul-medio);
+  border: 1px solid var(--azul-borde);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dorado);
+  margin: 0 10px;
+  white-space: nowrap;
+}
+.partido-meta { text-align: center; color: var(--texto-tenue); font-size: 11px; margin-top: 10px; }
+
+/* ---- Listas / filas ---- */
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--azul-borde);
+}
+.fila:last-child { border-bottom: none; }
+.fila-izq { display: flex; align-items: center; gap: 10px; }
+.fila-bandera { font-size: 22px; }
+
+.badge {
+  background: var(--azul-medio);
+  border: 1px solid var(--azul-borde);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--texto-tenue);
+  white-space: nowrap;
+}
+button.badge { font-family: inherit; }
+.badge-dorado { background: rgba(244,197,66,0.15); border-color: var(--dorado); color: var(--dorado); }
+.badge-verde { background: rgba(34,197,94,0.15); border-color: var(--verde); color: var(--verde); }
+
+.pill-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 4px; }
+.pill-row::-webkit-scrollbar { display: none; }
+.pill {
+  white-space: nowrap;
+  padding: 9px 16px;
+  border-radius: 20px;
+  background: var(--azul-medio);
+  border: 1px solid var(--azul-borde);
+  color: var(--texto-tenue);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+.pill.activo { background: linear-gradient(135deg, var(--azul-boton), var(--azul-boton2)); color: white; border-color: transparent; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 9px 4px; text-align: left; border-bottom: 1px solid var(--azul-borde); }
+th { color: var(--texto-tenue); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+td:first-child, th:first-child { padding-left: 2px; }
+
+/* ---- Grupo: medalla de posicion ---- */
+.pos-medalla {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--azul-medio);
+  color: var(--texto-tenue);
+}
+.pos-medalla.top { background: linear-gradient(135deg, var(--dorado), #c99a1f); color: #1a1400; }
+
+/* ---- Jugador ---- */
+.jugador-avatar {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--azul-boton), var(--morado));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 15px; color: white;
+  flex-shrink: 0;
+}
+.jugador-foto {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--azul-borde);
+  flex-shrink: 0;
+}
+
+/* ---- Ciudad / estadio tarjeta con foto simulada ---- */
+.ciudad-card {
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--azul-tarjeta);
+  border: 1px solid var(--azul-borde);
+}
+.ciudad-foto {
+  height: 70px;
+  background: linear-gradient(135deg, var(--morado), var(--azul-boton));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.ciudad-info { padding: 10px 12px; }
+.ciudad-info .nombre { font-size: 13px; font-weight: 700; }
+.ciudad-info .sub { font-size: 11px; color: var(--texto-tenue); }
+
+/* ---- Mexico: hero verde/blanco/rojo ---- */
+.hero-mexico {
+  background: radial-gradient(circle at 20% -10%, rgba(0,104,71,0.55), transparent 55%),
+              radial-gradient(circle at 90% 110%, rgba(206,17,38,0.45), transparent 55%),
+              linear-gradient(160deg, var(--azul-tarjeta) 0%, #101d40 100%);
+  border-radius: var(--radio);
+  padding: 26px 16px;
+  text-align: center;
+  margin-bottom: 14px;
+  border: 1px solid var(--azul-borde);
+}
+.hero-mexico .escudo { font-size: 44px; }
+.hero-mexico h2 { margin: 8px 0 2px; }
+.hero-mexico p { color: var(--texto-tenue); font-size: 13px; margin: 0; }
+
+/* ---- Zona +18 ---- */
+.candado {
+  text-align: center;
+  padding: 60px 20px 10px;
+  background: radial-gradient(circle at 50% 10%, rgba(236,72,153,0.25), transparent 60%);
+  border-radius: var(--radio);
+}
+.candado .num18 {
+  font-size: 44px; font-weight: 900;
+  background: linear-gradient(90deg, var(--rosa), var(--morado));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* ---- Historia: linea de campeones ---- */
+.campeon-fila {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 0; border-bottom: 1px solid var(--azul-borde);
+}
+.campeon-anio { font-weight: 800; font-size: 15px; width: 46px; color: var(--dorado); }
+.campeon-fila:last-child { border-bottom: none; }
+
+/* ---- Navegacion inferior ---- */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  background: linear-gradient(180deg, #101c40 0%, #0a1330 100%);
+  border-top: 1px solid var(--azul-borde);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0 12px;
+  z-index: 20;
+}
+.navbar a {
+  color: var(--texto-tenue);
+  text-decoration: none;
+  font-size: 11px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-weight: 600;
+}
+.navbar a.activo { color: var(--dorado); }
+.navbar .icono { font-size: 19px; }
+
+/* Utilidades */
+.texto-centro { text-align: center; }
+.texto-tenue { color: var(--texto-tenue); }
+.mt-0 { margin-top: 0; }

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Ajustes{% endblock %}
+{% block contenido %}
+
+<div class="card" style="padding:4px 16px;">
+  {% if usuario %}
+  <a href="{{ url_for('extras.perfil') }}" class="fila" style="text-decoration:none; color:inherit;">
+    <div>👤 Perfil</div><div class="texto-tenue">›</div>
+  </a>
+
+  <div class="fila">
+    <div>🔔 Notificaciones</div>
+    <form method="POST" action="{{ url_for('extras.notificaciones_toggle') }}">
+      <button type="submit" class="badge {{ 'badge-verde' if usuario.get('notificaciones_activadas', True) else '' }}" style="border:none; cursor:pointer;">
+        {{ 'Activado' if usuario.get('notificaciones_activadas', True) else 'Desactivado' }}
+      </button>
+    </form>
+  </div>
+  {% else %}
+  <a href="{{ url_for('auth.login') }}" class="fila" style="text-decoration:none; color:inherit;">
+    <div>👤 Perfil</div><div class="texto-tenue">Inicia sesion ›</div>
+  </a>
+  <div class="fila">
+    <div>🔔 Notificaciones</div><div class="texto-tenue" style="font-size:12px;">Inicia sesion</div>
+  </div>
+  {% endif %}
+
+  <a href="{{ url_for('extras.idioma') }}" class="fila" style="text-decoration:none; color:inherit;">
+    <div>🌐 Idioma</div><div class="badge">Español ›</div>
+  </a>
+
+  <a href="{{ url_for('extras.tema') }}" class="fila" style="text-decoration:none; color:inherit;">
+    <div>🎨 Tema</div><div class="badge">{{ 'Claro' if tema_actual=='claro' else 'Oscuro' }} ›</div>
+  </a>
+
+  <a href="{{ url_for('extras.privacidad') }}" class="fila" style="text-decoration:none; color:inherit;">
+    <div>🔒 Privacidad</div><div class="texto-tenue">›</div>
+  </a>
+
+  <a href="{{ url_for('extras.ayuda') }}" class="fila" style="text-decoration:none; color:inherit;">
+    <div>❓ Ayuda</div><div class="texto-tenue">›</div>
+  </a>
+
+  <a href="{{ url_for('quiniela.mi_quiniela') }}" class="fila" style="color:var(--dorado); text-decoration:none;">
+    <div>🎯 Mi Quiniela</div><div class="texto-tenue">›</div>
+  </a>
+
+  <a href="{{ url_for('extras.zona_18') }}" class="fila" style="color:var(--rosa); text-decoration:none;">
+    <div>🔞 Zona +18</div><div class="texto-tenue">›</div>
+  </a>
+</div>
+
+{% if usuario %}
+<a class="btn btn-secundario" style="color:var(--rojo); text-align:center;" href="{{ url_for('auth.cerrar_sesion') }}">Cerrar sesion</a>
+{% else %}
+<a class="btn" href="{{ url_for('auth.login') }}">Iniciar sesion</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Idioma{% endblock %}
+{% block contenido %}
+
+<div class="card" style="padding:6px 16px;">
+  <form method="POST" action="{{ url_for('extras.idioma') }}">
+    <label class="fila" style="cursor:pointer;">
+      <div class="fila-izq">🇲🇽 <span style="margin-left:8px;">Español</span></div>
+      <input type="radio" name="idioma" value="es" {{ 'checked' if idioma_actual=='es' }} onchange="this.form.submit()">
+    </label>
+    <label class="fila" style="cursor:pointer; opacity:0.5;">
+      <div class="fila-izq">🇺🇸 <span style="margin-left:8px;">English</span></div>
+      <input type="radio" name="idioma" value="en" {{ 'checked' if idioma_actual=='en' }} onchange="this.form.submit()">
+    </label>
+  </form>
+</div>
+<p class="texto-tenue texto-centro" style="font-size:12px;">Por ahora la app solo esta disponible en Español. Mas idiomas, proximamente.</p>
+
+<a class="btn btn-secundario" href="{{ url_for('extras.ajustes') }}">← Volver a Ajustes</a>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set mostrar_topbar = false %}
+{% set mostrar_navbar = false %}
+{% block contenido %}
+<div class="hero-auth chico" style="margin:-16px -16px 22px -16px;">
+  <div class="balon" style="font-size:34px;">🔑</div>
+  <p style="margin-top:14px; font-weight:700; font-size:16px; color:var(--texto);">Recuperar cuenta</p>
+  <p>{% if paso == 'nueva_contrasena' %}Ingresa tu nueva contraseña{% else %}Ingresa tu correo y te enviaremos un codigo para restablecer tu contraseña{% endif %}</p>
+</div>
+
+{% with mensajes = get_flashed_messages() %}
+  {% if mensajes %}{% for m in mensajes %}<div class="mensaje-flash" style="margin:0 0 14px;">{{ m }}</div>{% endfor %}{% endif %}
+{% endwith %}
+
+{% if paso == 'nueva_contrasena' %}
+<form method="POST" action="{{ url_for('auth.recuperar') }}">
+  <input type="hidden" name="accion" value="nueva_contrasena">
+  <input type="hidden" name="correo" value="{{ correo }}">
+  <div class="campo campo-icono"><label>Nueva contraseña</label><span>🔒</span><input type="password" name="nueva_contrasena" required></div>
+  <div class="campo campo-icono"><label>Confirmar contraseña</label><span>🔒</span><input type="password" name="confirmar_contrasena" required></div>
+  <button class="btn" type="submit">Guardar nueva contraseña</button>
+</form>
+{% else %}
+<form method="POST" action="{{ url_for('auth.recuperar') }}">
+  <input type="hidden" name="accion" value="enviar_codigo">
+  <div class="campo campo-icono"><label>Correo electronico</label><span>✉️</span><input type="email" name="correo" required></div>
+  <button class="btn" type="submit">Enviar codigo</button>
+</form>
+{% endif %}
+
+<a class="enlace-tenue" href="{{ url_for('auth.login') }}">← Volver al inicio de sesion</a>
+{% endblock %}

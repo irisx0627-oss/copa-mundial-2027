@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Fase de grupos{% endblock %}
+{% block contenido %}
+
+<div class="pill-row">
+  <a class="pill activo" href="{{ url_for('content.grupos') }}">Grupos</a>
+  <a class="pill" href="#">Tabla general</a>
+</div>
+
+{% for g in grupos %}
+<div class="card">
+  <h3>🅰️ Grupo {{ g.grupo }}</h3>
+  <table>
+    <tr><th>Pos</th><th>Equipo</th><th>PJ</th><th>Pts</th></tr>
+    {% for eq in g.tabla %}
+    <tr>
+      <td><span class="pos-medalla {{ 'top' if eq.posicion <= 2 }}">{{ eq.posicion }}</span></td>
+      <td>
+        {% if eq.bandera_url %}
+          <img src="{{ eq.bandera_url }}" alt="{{ eq.seleccion }}" class="bandera-img bandera-img-sm" onerror="this.outerHTML='{{ eq.bandera }}'">
+        {% else %}
+          {{ eq.bandera }}
+        {% endif %}
+        {{ eq.seleccion }}
+      </td>
+      <td>{{ eq.pj }}</td>
+      <td>{{ eq.pts }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% else %}
+<p class="texto-tenue">No hay grupos cargados todavia. Corre database/create_collections.py</p>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Eliminatorias{% endblock %}
+{% block contenido %}
+
+<div class="pill-row">
+  {% for f in fases %}
+  <a class="pill {{ 'activo' if loop.first }}" href="#{{ f|lower }}">{{ f }}</a>
+  {% endfor %}
+</div>
+
+<div class="card texto-centro" style="padding: 40px 16px; background: radial-gradient(circle at 50% 0%, rgba(244,197,66,0.15), transparent 60%);">
+  <div style="font-size:44px;">🏆</div>
+  <h3>Camino a la final</h3>
+  <p class="texto-tenue" style="font-size:13px;">
+    El cuadro de eliminacion directa se arma automaticamente cuando termina
+    la fase de grupos (2do y 1er lugar de cada grupo, mas los 8 mejores terceros).
+  </p>
+</div>
+
+{% for f in fases %}
+<div class="card">
+  <h3>{{ f }}</h3>
+  <p class="texto-tenue" style="font-size:13px;">Por definir</p>
+</div>
+{% endfor %}
+
+{% endblock %}

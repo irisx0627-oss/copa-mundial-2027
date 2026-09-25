@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Ayuda{% endblock %}
+{% block contenido %}
+
+<div class="card">
+  <h3>❓ Preguntas frecuentes</h3>
+
+  <div style="margin-bottom:16px;">
+    <p style="font-weight:600; margin:0 0 4px;">¿Como hago un pronostico?</p>
+    <p class="texto-tenue" style="font-size:13px; margin:0;">Ve a la pantalla de Partidos, escribe el marcador que crees que va a pasar en un partido que aun no se juega, y dale en "Predecir".</p>
+  </div>
+
+  <div style="margin-bottom:16px;">
+    <p style="font-weight:600; margin:0 0 4px;">¿Como gano puntos?</p>
+    <p class="texto-tenue" style="font-size:13px; margin:0;">3 puntos si aciertas el marcador exacto, 1 punto si aciertas quien gana o si es empate, 0 si fallas. Revisa tu progreso en Mi Quiniela.</p>
+  </div>
+
+  <div style="margin-bottom:16px;">
+    <p style="font-weight:600; margin:0 0 4px;">¿Se puede apostar dinero?</p>
+    <p class="texto-tenue" style="font-size:13px; margin:0;">No. La Quiniela es solo de puntos e insignias dentro de la app, sin dinero real de por medio.</p>
+  </div>
+
+  <div style="margin-bottom:16px;">
+    <p style="font-weight:600; margin:0 0 4px;">Olvide mi contraseña, ¿que hago?</p>
+    <p class="texto-tenue" style="font-size:13px; margin:0;">En la pantalla de inicio de sesion dale a "¿Olvidaste tu contraseña?" y sigue los pasos.</p>
+  </div>
+
+  <div>
+    <p style="font-weight:600; margin:0 0 4px;">¿Como cambio de tema o idioma?</p>
+    <p class="texto-tenue" style="font-size:13px; margin:0;">En Ajustes puedes elegir entre tema Oscuro o Claro. El idioma, por ahora, solo esta disponible en Español.</p>
+  </div>
+</div>
+
+<a class="btn btn-secundario" href="{{ url_for('extras.ajustes') }}">← Volver a Ajustes</a>
+
+{% endblock %}

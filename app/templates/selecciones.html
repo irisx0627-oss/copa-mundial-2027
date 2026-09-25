@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Selecciones{% endblock %}
+{% block contenido %}
+
+<form method="GET" class="campo campo-icono">
+  <span>🔍</span>
+  <input type="text" name="q" placeholder="Buscar seleccion..." value="{{ busqueda }}">
+</form>
+
+<div class="pill-row">
+  <a class="pill {{ 'activo' if confederacion_activa=='todos' }}" href="{{ url_for('content.selecciones', confederacion='todos') }}">Todos</a>
+  {% for c in confederaciones %}
+  <a class="pill {{ 'activo' if confederacion_activa==c }}" href="{{ url_for('content.selecciones', confederacion=c) }}">{{ c }}</a>
+  {% endfor %}
+</div>
+
+<div class="card" style="padding:6px 16px;">
+{% for s in selecciones %}
+<div class="fila">
+  <div class="fila-izq">
+    {% if s.bandera_url %}
+      <img src="{{ s.bandera_url }}" alt="{{ s.nombre }}" class="bandera-img bandera-img-md" onerror="this.outerHTML='<span class=&quot;fila-bandera&quot;>{{ s.bandera }}</span>'">
+    {% else %}
+      <span class="fila-bandera">{{ s.bandera }}</span>
+    {% endif %}
+    {{ s.nombre }}
+  </div>
+  <div class="badge">Grupo {{ s.grupo }}</div>
+</div>
+{% else %}
+<p class="texto-tenue">No se encontraron selecciones. ¿Ya corriste el script de carga de datos?</p>
+{% endfor %}
+</div>
+
+{% endblock %}

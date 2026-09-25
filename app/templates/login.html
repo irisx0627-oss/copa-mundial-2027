@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set mostrar_topbar = false %}
+{% set mostrar_navbar = false %}
+{% block contenido %}
+<div class="hero-auth" style="margin:-16px -16px 22px -16px;">
+  <div class="balon">🏆</div>
+  <h1>FIFA WORLD CUP<br>2027</h1>
+  <div class="subtitulo">CANADÁ · MÉXICO · ESTADOS UNIDOS</div>
+  <p>El mundo se une por el futbol</p>
+</div>
+
+{% with mensajes = get_flashed_messages() %}
+  {% if mensajes %}{% for m in mensajes %}<div class="mensaje-flash" style="margin:0 0 14px;">{{ m }}</div>{% endfor %}{% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('auth.login') }}">
+  <div class="campo campo-icono">
+    <label>Usuario o correo electronico</label>
+    <span>👤</span>
+    <input type="text" name="usuario_o_correo" required>
+  </div>
+  <div class="campo campo-icono">
+    <label>Contraseña</label>
+    <span>🔒</span>
+    <input type="password" name="contrasena" required>
+  </div>
+  <button class="btn" type="submit">Iniciar sesion</button>
+</form>
+
+<a class="enlace-tenue" href="{{ url_for('auth.recuperar') }}">¿Olvidaste tu contraseña?</a>
+<p class="enlace-tenue">¿No tienes cuenta? <a href="{{ url_for('auth.registrarse') }}">Registrate</a></p>
+{% endblock %}

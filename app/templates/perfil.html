@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Perfil{% endblock %}
+{% block contenido %}
+
+<div class="card texto-centro">
+  <div class="jugador-avatar" style="width:64px; height:64px; font-size:24px; margin:0 auto 10px;">{{ usuario.nombre[0] }}</div>
+  <h3 style="margin:0;">{{ usuario.nombre }}</h3>
+  <p class="texto-tenue" style="font-size:13px; margin:2px 0 0;">@{{ usuario.usuario }} · {{ usuario.correo }}</p>
+</div>
+
+<div class="card">
+  <h3>Datos personales</h3>
+  <form method="POST" action="{{ url_for('extras.perfil') }}">
+    <input type="hidden" name="accion" value="datos">
+    <div class="campo">
+      <label>Nombre completo</label>
+      <input type="text" name="nombre" value="{{ usuario.nombre }}" required>
+    </div>
+    <div class="campo">
+      <label>Fecha de nacimiento</label>
+      <input type="date" name="fecha_nacimiento" value="{{ usuario.fecha_nacimiento }}">
+    </div>
+    <p class="texto-tenue" style="font-size:12px; margin:-6px 0 14px;">
+      Tu correo (<strong>{{ usuario.correo }}</strong>) y tu usuario (<strong>@{{ usuario.usuario }}</strong>) no se pueden cambiar aqui.
+    </p>
+    <button class="btn" type="submit">Guardar cambios</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Cambiar contraseña</h3>
+  <form method="POST" action="{{ url_for('extras.perfil') }}">
+    <input type="hidden" name="accion" value="contrasena">
+    <div class="campo"><label>Contraseña actual</label><input type="password" name="contrasena_actual" required></div>
+    <div class="campo"><label>Nueva contraseña</label><input type="password" name="nueva_contrasena" required></div>
+    <div class="campo"><label>Confirmar nueva contraseña</label><input type="password" name="confirmar_contrasena" required></div>
+    <button class="btn btn-secundario" type="submit">Actualizar contraseña</button>
+  </form>
+</div>
+
+<a class="btn btn-secundario" href="{{ url_for('extras.ajustes') }}">← Volver a Ajustes</a>
+
+{% endblock %}

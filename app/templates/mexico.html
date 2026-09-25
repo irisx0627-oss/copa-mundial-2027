@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block titulo_barra %}🇲🇽 Mexico{% endblock %}
+{% block contenido %}
+
+<div class="hero-mexico">
+  <img src="https://flagcdn.com/w80/mx.png" alt="Mexico" class="bandera-img bandera-img-xl" onerror="this.outerHTML='🇲🇽'">
+  <h2>Mexico</h2>
+  <p>La pasion nos une</p>
+  {% if grupo %}<div class="badge badge-dorado" style="margin-top:8px; display:inline-block;">Grupo {{ grupo.grupo }}</div>{% endif %}
+</div>
+
+<div class="pill-row">
+  <a class="pill activo" href="#">Partidos</a>
+  <a class="pill" href="#">Jugadores</a>
+  <a class="pill" href="#">Historia</a>
+</div>
+
+<div class="card">
+  <h3>Partidos de Mexico</h3>
+  {% for p in partidos %}
+  <div class="partido-equipos" style="margin-bottom:10px;">
+    <div class="partido-equipo">{% if p.get('bandera_local_url') %}<img src="{{ p.get('bandera_local_url') }}" alt="" class="bandera-img bandera-img-lg">{% else %}<span class="bandera">{{ p.get('bandera_local','🏳️') }}</span>{% endif %}<span class="nombre">{{ p.local }}</span></div>
+    <div class="partido-vs">{{ p.fecha }}</div>
+    <div class="partido-equipo">{% if p.get('bandera_visitante_url') %}<img src="{{ p.get('bandera_visitante_url') }}" alt="" class="bandera-img bandera-img-lg">{% else %}<span class="bandera">{{ p.get('bandera_visitante','🏳️') }}</span>{% endif %}<span class="nombre">{{ p.visitante }}</span></div>
+  </div>
+  {% else %}
+  <p class="texto-tenue" style="font-size:13px;">Calendario por confirmar.</p>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <h3>🏟️ Estadios en Mexico</h3>
+  {% for e in estadios %}
+  <div class="fila"><div>{{ e.nombre }}</div><div class="badge">{{ e.ciudad }}</div></div>
+  {% endfor %}
+</div>
+
+{% if jugadores %}
+<div class="card">
+  <h3>👤 Jugadores destacados</h3>
+  {% for j in jugadores %}
+  <div class="fila">
+    <div class="fila-izq">
+      {% if j.foto_url %}
+        <img src="{{ j.foto_url }}" alt="{{ j.nombre }}" class="jugador-foto">
+      {% else %}
+        <div class="jugador-avatar">{{ j.nombre[0] }}</div>
+      {% endif %}
+      <div>
+        <div style="font-weight:600;">{{ j.nombre }}</div>
+        <div class="texto-tenue" style="font-size:12px;">{{ j.posicion }}</div>
+      </div>
+    </div>
+    <div class="badge">#{{ j.numero }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="card" style="text-align:center; background:linear-gradient(135deg, #006847, #ce1126);">
+  <strong style="font-size:16px;">¡Vamos Mexico!</strong>
+</div>
+
+{% endblock %}

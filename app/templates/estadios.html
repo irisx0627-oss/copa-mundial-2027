@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Estadios{% endblock %}
+{% block contenido %}
+
+<div class="pill-row">
+  <a class="pill {{ 'activo' if pais_activo=='todos' }}" href="{{ url_for('content.estadios', pais='todos') }}">Todos</a>
+  {% for p in paises %}
+  <a class="pill {{ 'activo' if pais_activo==p }}" href="{{ url_for('content.estadios', pais=p) }}">{{ p }}</a>
+  {% endfor %}
+</div>
+
+{% for e in estadios %}
+<div class="card" style="display:flex; align-items:center; gap:14px;">
+  <div style="font-size:30px;">🏟️</div>
+  <div>
+    <h3 style="margin:0;">{{ e.nombre }}</h3>
+    <p class="texto-tenue" style="font-size:13px; margin:2px 0 0;">{{ e.ciudad }}, {{ e.pais }}</p>
+    {% if e.capacidad %}<p style="font-size:13px; margin:4px 0 0;">Capacidad: {{ "{:,}".format(e.capacidad) }}</p>{% endif %}
+  </div>
+</div>
+{% else %}
+<p class="texto-tenue">No hay estadios cargados todavia.</p>
+{% endfor %}
+
+{% endblock %}

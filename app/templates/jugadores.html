@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Jugadores{% endblock %}
+{% block contenido %}
+
+<div class="pill-row">
+  <a class="pill {{ 'activo' if vista=='destacados' }}" href="{{ url_for('content.jugadores', vista='destacados') }}">Mas destacados</a>
+  <a class="pill {{ 'activo' if vista=='por_seleccion' }}" href="{{ url_for('content.jugadores', vista='por_seleccion') }}">Por seleccion</a>
+  <a class="pill {{ 'activo' if vista=='por_posicion' }}" href="{{ url_for('content.jugadores', vista='por_posicion') }}">Por posicion</a>
+</div>
+
+<p class="texto-tenue" style="font-size:12px; margin:0 0 10px;">{{ total }} jugadores en la base de datos</p>
+
+<div class="card" style="padding:6px 16px;">
+{% for j in jugadores %}
+<div class="fila">
+  <div class="fila-izq">
+    {% if j.foto_url %}
+      <img src="{{ j.foto_url }}" alt="{{ j.nombre }}" class="jugador-foto">
+    {% else %}
+      <div class="jugador-avatar">{{ j.nombre[0] }}</div>
+    {% endif %}
+    <div>
+      <div style="font-weight:600;">{{ j.nombre }}</div>
+      <div class="texto-tenue" style="font-size:12px;">
+        {% if j.bandera_url %}
+          <img src="{{ j.bandera_url }}" alt="{{ j.seleccion }}" class="bandera-img bandera-img-sm" onerror="this.outerHTML='{{ j.bandera }}'">
+        {% else %}
+          {{ j.bandera }}
+        {% endif %}
+        {{ j.seleccion }} · {{ j.posicion }} · #{{ j.numero }}
+      </div>
+    </div>
+  </div>
+  <div class="badge">{{ j.edad }} años</div>
+</div>
+{% else %}
+<p class="texto-tenue">Aun no hay jugadores cargados. Corre database/create_collections.py</p>
+{% endfor %}
+</div>
+
+{% endblock %}

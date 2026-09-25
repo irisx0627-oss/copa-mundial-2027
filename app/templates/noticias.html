@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Noticias{% endblock %}
+{% block contenido %}
+
+<div class="pill-row">
+  {% for c in categorias %}
+  <a class="pill {{ 'activo' if categoria_activa==c }}" href="{{ url_for('content.noticias', categoria=c) }}">{{ c }}</a>
+  {% endfor %}
+</div>
+
+{% for n in noticias %}
+<div class="card" style="display:flex; gap:12px; align-items:center;">
+  <div style="font-size:28px;">📰</div>
+  <div>
+    <h3 style="margin:0 0 4px; font-size:14px;">{{ n.titulo }}</h3>
+    <p class="texto-tenue" style="font-size:12px; margin:0;">Hace {{ n.horas }} horas · {{ n.categoria }}</p>
+  </div>
+</div>
+{% else %}
+<p class="texto-tenue">No hay noticias cargadas todavia.</p>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Privacidad{% endblock %}
+{% block contenido %}
+
+<div class="card">
+  <h3>🔒 Que datos guardamos</h3>
+  <p class="texto-tenue" style="font-size:13px;">
+    Guardamos tu nombre, correo, usuario y fecha de nacimiento para tu cuenta, y
+    tus pronosticos de la Quiniela para calcular tus puntos e insignias. Tu
+    contraseña nunca se guarda en texto plano: se guarda cifrada (hash).
+  </p>
+</div>
+
+<div class="card">
+  <h3>Con quien se comparte</h3>
+  <p class="texto-tenue" style="font-size:13px;">
+    Tus datos no se comparten con nadie fuera de esta aplicacion. Viven
+    unicamente en tu propia base de datos de MongoDB Atlas.
+  </p>
+</div>
+
+<div class="card">
+  <h3>Tus derechos</h3>
+  <p class="texto-tenue" style="font-size:13px;">
+    Puedes editar tus datos personales en cualquier momento desde
+    <strong>Ajustes → Perfil</strong>. Si quieres eliminar tu cuenta por completo,
+    contacta a quien administra esta aplicacion.
+  </p>
+</div>
+
+<a class="btn btn-secundario" href="{{ url_for('extras.ajustes') }}">← Volver a Ajustes</a>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block titulo_barra %}FIFA World Cup 2027{% endblock %}
+{% block contenido %}
+
+<div class="countdown-card">
+  <div class="countdown-titulo">Faltan</div>
+  <div class="countdown-numeros">
+    <div class="countdown-bloque"><div class="num">245</div><div class="etq">Dias</div></div>
+    <div class="countdown-bloque"><div class="num">14</div><div class="etq">Horas</div></div>
+    <div class="countdown-bloque"><div class="num">32</div><div class="etq">Min</div></div>
+    <div class="countdown-bloque"><div class="num">16</div><div class="etq">Seg</div></div>
+  </div>
+</div>
+
+{% if proximo_partido %}
+<div class="partido-card">
+  <p style="color:var(--texto-tenue); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin:0 0 10px;">Proximo partido</p>
+  <div class="partido-equipos">
+    <div class="partido-equipo">
+      {% if proximo_partido.get('bandera_local_url') %}<img src="{{ proximo_partido.get('bandera_local_url') }}" alt="" class="bandera-img bandera-img-lg">{% else %}<span class="bandera">{{ proximo_partido.get('bandera_local','🏳️') }}</span>{% endif %}
+      <span class="nombre">{{ proximo_partido.local }}</span>
+    </div>
+    <div class="partido-vs">VS</div>
+    <div class="partido-equipo">
+      {% if proximo_partido.get('bandera_visitante_url') %}<img src="{{ proximo_partido.get('bandera_visitante_url') }}" alt="" class="bandera-img bandera-img-lg">{% else %}<span class="bandera">{{ proximo_partido.get('bandera_visitante','🏳️') }}</span>{% endif %}
+      <span class="nombre">{{ proximo_partido.visitante }}</span>
+    </div>
+  </div>
+  <p class="partido-meta">{{ proximo_partido.fecha }} · {{ proximo_partido.hora }}h · {{ proximo_partido.estadio }}</p>
+</div>
+{% endif %}
+
+{% if ultimo_resultado %}
+<div class="partido-card">
+  <p style="color:var(--texto-tenue); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin:0 0 10px;">Ultimo resultado</p>
+  <div class="partido-equipos">
+    <div class="partido-equipo">
+      {% if ultimo_resultado.get('bandera_local_url') %}<img src="{{ ultimo_resultado.get('bandera_local_url') }}" alt="" class="bandera-img bandera-img-lg">{% else %}<span class="bandera">{{ ultimo_resultado.get('bandera_local','🏳️') }}</span>{% endif %}
+      <span class="nombre">{{ ultimo_resultado.local }}</span>
+    </div>
+    <div class="partido-vs badge-dorado" style="border-radius:20px;">{{ ultimo_resultado.marcador }}</div>
+    <div class="partido-equipo">
+      {% if ultimo_resultado.get('bandera_visitante_url') %}<img src="{{ ultimo_resultado.get('bandera_visitante_url') }}" alt="" class="bandera-img bandera-img-lg">{% else %}<span class="bandera">{{ ultimo_resultado.get('bandera_visitante','🏳️') }}</span>{% endif %}
+      <span class="nombre">{{ ultimo_resultado.visitante }}</span>
+    </div>
+  </div>
+  <p class="partido-meta">{{ ultimo_resultado.fase }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <h3>🌎 Datos del Mundial</h3>
+  <table>
+    <tr><td>🌍 Paises anfitriones</td><td style="text-align:right">{{ datos.get('paises_anfitriones','-') }}</td></tr>
+    <tr><td>🏙️ Ciudades sede</td><td style="text-align:right">{{ datos.get('ciudades_sede','-') }}</td></tr>
+    <tr><td>🏟️ Estadios</td><td style="text-align:right">{{ datos.get('estadios','-') }}</td></tr>
+    <tr><td>🏳️ Selecciones</td><td style="text-align:right">{{ datos.get('selecciones_participantes','-') }}</td></tr>
+    <tr><td>👤 Jugadores</td><td style="text-align:right">{{ datos.get('jugadores','-') }}</td></tr>
+    <tr><td>📁 Grupos</td><td style="text-align:right">{{ datos.get('grupos','-') }}</td></tr>
+    <tr><td>⚽ Partidos</td><td style="text-align:right">{{ datos.get('partidos','-') }}</td></tr>
+  </table>
+</div>
+
+{% if grupo_a %}
+<div class="card">
+  <h3>📊 Tabla de grupos (Grupo A)</h3>
+  <table>
+    <tr><th>Pos</th><th>Equipo</th><th>Pts</th></tr>
+    {% for eq in grupo_a.tabla %}
+    <tr>
+      <td><span class="pos-medalla {{ 'top' if eq.posicion <= 2 }}">{{ eq.posicion }}</span></td>
+      <td>
+        {% if eq.bandera_url %}
+          <img src="{{ eq.bandera_url }}" alt="{{ eq.seleccion }}" class="bandera-img bandera-img-sm" onerror="this.outerHTML='{{ eq.bandera }}'">
+        {% else %}
+          {{ eq.bandera }}
+        {% endif %}
+        {{ eq.seleccion }}
+      </td>
+      <td>{{ eq.pts }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+<div class="grid-2">
+  <a class="btn btn-secundario" href="{{ url_for('content.grupos') }}">📊 Grupos</a>
+  <a class="btn btn-secundario" href="{{ url_for('content.jugadores') }}">👤 Jugadores</a>
+  <a class="btn btn-secundario" href="{{ url_for('content.estadios') }}">🏟️ Estadios</a>
+  <a class="btn btn-secundario" href="{{ url_for('content.mexico') }}">🇲🇽 Mexico</a>
+</div>
+
+{% endblock %}

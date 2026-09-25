@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Partidos{% endblock %}
+{% block contenido %}
+
+<div class="pill-row">
+  <a class="pill {{ 'activo' if filtro=='todos' }}" href="{{ url_for('content.partidos', filtro='todos') }}">Todos</a>
+  <a class="pill {{ 'activo' if filtro=='hoy' }}" href="{{ url_for('content.partidos', filtro='hoy') }}">Hoy</a>
+  <a class="pill {{ 'activo' if filtro=='manana' }}" href="{{ url_for('content.partidos', filtro='manana') }}">Mañana</a>
+  <a class="pill {{ 'activo' if filtro=='fase_grupos' }}" href="{{ url_for('content.partidos', filtro='fase_grupos') }}">Fase de grupos</a>
+</div>
+
+<a class="pill" style="display:inline-block; margin-bottom:14px;" href="{{ url_for('quiniela.mi_quiniela') }}">🎯 Mi quiniela</a>
+
+{% set fecha_actual = [""] %}
+{% for p in partidos %}
+  {% if p.fecha != fecha_actual[0] %}
+    {% if fecha_actual.append(p.fecha) %}{% endif %}
+    <p class="texto-tenue" style="font-size:13px; margin: 16px 2px 8px;">{{ p.fecha }}</p>
+  {% endif %}
+  <div class="partido-card">
+    <div class="partido-equipos">
+      <div class="partido-equipo">
+        {% if p.bandera_local_url %}
+          <img src="{{ p.bandera_local_url }}" alt="{{ p.local }}" class="bandera-img bandera-img-lg" onerror="this.outerHTML='{{ p.get('bandera_local','🏳️') }}'">
+        {% else %}
+          <span class="bandera">{{ p.get('bandera_local','🏳️') }}</span>
+        {% endif %}
+        <span class="nombre">{{ p.local }}</span>
+      </div>
+      <div class="partido-vs">{{ p.marcador if p.marcador else p.hora ~ 'h' }}</div>
+      <div class="partido-equipo">
+        {% if p.bandera_visitante_url %}
+          <img src="{{ p.bandera_visitante_url }}" alt="{{ p.visitante }}" class="bandera-img bandera-img-lg" onerror="this.outerHTML='{{ p.get('bandera_visitante','🏳️') }}'">
+        {% else %}
+          <span class="bandera">{{ p.get('bandera_visitante','🏳️') }}</span>
+        {% endif %}
+        <span class="nombre">{{ p.visitante }}</span>
+      </div>
+    </div>
+    <p class="partido-meta">{{ p.estadio }} · {{ p.fase }}</p>
+
+    {% if not p.marcador %}
+      <div style="border-top:1px solid var(--azul-borde); margin-top:12px; padding-top:12px;">
+        {% if p.mi_prediccion %}
+          <p class="texto-tenue" style="font-size:12px; margin:0 0 8px; text-align:center;">
+            🎯 Tu pronostico: <strong style="color:var(--dorado);">{{ p.mi_prediccion.goles_local }} - {{ p.mi_prediccion.goles_visitante }}</strong> (puedes cambiarlo)
+          </p>
+        {% endif %}
+        <form method="POST" action="{{ url_for('quiniela.predecir', partido_id=p._id_str) }}" style="display:flex; align-items:center; justify-content:center; gap:10px;">
+          <input type="number" min="0" max="20" name="goles_local" placeholder="0"
+                 value="{{ p.mi_prediccion.goles_local if p.mi_prediccion else '' }}"
+                 style="width:52px; text-align:center; padding:8px; border-radius:8px; border:1px solid var(--azul-borde); background:var(--azul-medio); color:var(--texto);">
+          <span class="texto-tenue">-</span>
+          <input type="number" min="0" max="20" name="goles_visitante" placeholder="0"
+                 value="{{ p.mi_prediccion.goles_visitante if p.mi_prediccion else '' }}"
+                 style="width:52px; text-align:center; padding:8px; border-radius:8px; border:1px solid var(--azul-borde); background:var(--azul-medio); color:var(--texto);">
+          <button type="submit" class="pill activo" style="border:none; cursor:pointer;">
+            {{ 'Actualizar' if p.mi_prediccion else '🎯 Predecir' }}
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+{% else %}
+  <p class="texto-tenue">Aun no hay partidos cargados para este filtro.</p>
+{% endfor %}
+
+{% endblock %}

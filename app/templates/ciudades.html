@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Ciudades sede{% endblock %}
+{% block contenido %}
+
+<div class="pill-row">
+  {% for pais in por_pais.keys() %}
+  <a class="pill" href="#{{ pais|lower|replace(' ', '-') }}">{{ pais }}</a>
+  {% endfor %}
+</div>
+
+{% for pais, ciudades in por_pais.items() %}
+<h3 id="{{ pais|lower|replace(' ', '-') }}" style="margin-top:20px;">{{ pais }}</h3>
+<div class="grid-2">
+  {% for c in ciudades %}
+  <div class="ciudad-card">
+    <div class="ciudad-foto">🏙️</div>
+    <div class="ciudad-info">
+      <div class="nombre">{{ c.ciudad }}</div>
+      <div class="sub">{{ c.estadio }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="texto-tenue">No hay ciudades sede cargadas todavia.</p>
+{% endfor %}
+
+{% endblock %}

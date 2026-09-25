@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Quiz{% endblock %}
+{% block contenido %}
+
+{% if resultado is not none %}
+<div class="card" style="text-align:center;">
+  <h3>Resultado</h3>
+  <p style="font-size:28px; margin:0;">{{ resultado }} / {{ total }}</p>
+  <a class="btn" href="{{ url_for('extras.quiz') }}" style="margin-top:14px;">Volver a intentar</a>
+</div>
+{% else %}
+<div class="logo-pantalla" style="padding-top:10px;">
+  <div style="font-size:40px;">🧠</div>
+  <h1 style="font-size:18px;">¿Que tanto sabes del Mundial?</h1>
+  <p>Pon a prueba tus conocimientos sobre el futbol y la Copa del Mundo</p>
+</div>
+
+<form method="POST" action="{{ url_for('extras.calificar_quiz') }}">
+  {% for p in preguntas %}
+  {% set indice_pregunta = loop.index0 %}
+  <div class="card">
+    <p style="font-weight:600;">{{ loop.index }}. {{ p.pregunta }}</p>
+    {% for opcion in p.opciones %}
+    <label style="display:flex; align-items:center; gap:8px; padding:6px 0; font-size:14px;">
+      <input type="radio" name="pregunta_{{ indice_pregunta }}" value="{{ opcion }}">
+      {{ opcion }}
+    </label>
+    {% endfor %}
+  </div>
+  {% endfor %}
+  <button class="btn btn-dorado" type="submit">Comenzar</button>
+</form>
+{% endif %}
+
+{% endblock %}

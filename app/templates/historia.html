@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Historia del Mundial{% endblock %}
+{% block contenido %}
+
+<div class="pill-row">
+  <a class="pill activo" href="#">Campeones</a>
+  <a class="pill" href="#">Datos curiosos</a>
+  <a class="pill" href="#">Ediciones</a>
+</div>
+
+<div class="card" style="padding:6px 16px;">
+{% for c in campeones %}
+<div class="campeon-fila">
+  <div class="campeon-anio">{{ c.anio }}</div>
+  {% if c.bandera_url %}
+    <img src="{{ c.bandera_url }}" alt="{{ c.campeon }}" class="bandera-img bandera-img-md" onerror="this.outerHTML='{{ c.bandera }}'">
+  {% else %}
+    <div style="font-size:20px;">{{ c.bandera }}</div>
+  {% endif %}
+  <div style="font-weight:600;">{{ c.campeon }}</div>
+</div>
+{% else %}
+<p class="texto-tenue">No hay historial cargado todavia.</p>
+{% endfor %}
+</div>
+
+<div class="card texto-centro">
+  <p class="texto-tenue" style="font-size:13px; margin:0;">La Copa del Mundo ha sido el sueño de millones de fans desde 1930.</p>
+</div>
+
+{% endblock %}
