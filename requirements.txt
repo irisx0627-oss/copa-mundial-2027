@@ -3,3 +3,4 @@ pymongo==4.8.0
 python-dotenv==1.0.1
 dnspython==2.6.1
 Werkzeug==3.0.3
+gunicorn==22.0.0
