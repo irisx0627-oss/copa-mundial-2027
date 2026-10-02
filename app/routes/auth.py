@@ -31,6 +31,7 @@ def login():
             session["nombre"] = usuario_doc["nombre"]
             session["tema"] = usuario_doc.get("tema", "oscuro")
             session["idioma"] = usuario_doc.get("idioma", "es")
+            session["es_admin"] = usuario_doc.get("es_admin", False)
             return redirect(url_for("main.inicio"))
 
         flash("Usuario/correo o contraseña incorrectos.")
@@ -74,6 +75,7 @@ def registrarse():
             "notificaciones_activadas": True,
             "idioma": "es",
             "tema": "oscuro",
+            "es_admin": False,
         })
 
         flash("Cuenta creada. Ahora inicia sesion.")

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Panel de administrador{% endblock %}
+{% block telefono_clase %}admin{% endblock %}
+{% block contenido %}
+
+<p class="texto-tenue" style="margin-top:0;">
+  Agrega, modifica, elimina y consulta la informacion del torneo. Los cambios se
+  reflejan de inmediato en toda la aplicacion.
+</p>
+
+<div class="admin-grid">
+  {% for s in secciones %}
+  <a class="admin-tile" href="{{ url_for('admin.lista', slug=s.slug) }}">
+    <span class="icono">{{ s.icono }}</span>
+    <span class="titulo">{{ s.titulo }}</span>
+    <div class="total">{{ s.total }} registros</div>
+  </a>
+  {% endfor %}
+
+  <a class="admin-tile" href="{{ url_for('admin.grupos') }}">
+    <span class="icono">📊</span>
+    <span class="titulo">Tabla de grupos</span>
+    <div class="total">Resultados</div>
+  </a>
+
+  <a class="admin-tile" href="{{ url_for('admin.usuarios') }}">
+    <span class="icono">🧑‍💻</span>
+    <span class="titulo">Usuarios</span>
+    <div class="total">{{ total_usuarios }} registrados</div>
+  </a>
+</div>
+
+<a class="btn btn-secundario" style="margin-top:18px; text-align:center; display:block;" href="{{ url_for('extras.ajustes') }}">← Volver a Ajustes</a>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Tabla de grupos{% endblock %}
+{% block telefono_clase %}admin{% endblock %}
+{% block contenido %}
+
+<p class="texto-tenue" style="margin-top:0;">
+  Actualiza los resultados de cada grupo: partidos jugados (PJ), ganados (PG), empatados (PE),
+  perdidos (PP), goles a favor (GF), goles en contra (GC) y puntos (PTS). Al guardar, la tabla
+  se reordena automaticamente por puntos.
+</p>
+
+{% for grupo in grupos %}
+<div class="card">
+  <h3 class="mt-0">Grupo {{ grupo.grupo }}</h3>
+  <form method="POST" action="{{ url_for('admin.guardar_grupo', letra=grupo.grupo) }}">
+    <div class="admin-grupo-tabla">
+      <table class="admin-tabla">
+        <thead>
+          <tr>
+            <th>Equipo</th>
+            <th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>PTS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for fila in grupo.tabla %}
+          <tr>
+            <td>{{ fila.seleccion }}</td>
+            <td><input type="number" name="{{ fila.seleccion }}_pj" value="{{ fila.pj }}" min="0"></td>
+            <td><input type="number" name="{{ fila.seleccion }}_pg" value="{{ fila.pg }}" min="0"></td>
+            <td><input type="number" name="{{ fila.seleccion }}_pe" value="{{ fila.pe }}" min="0"></td>
+            <td><input type="number" name="{{ fila.seleccion }}_pp" value="{{ fila.pp }}" min="0"></td>
+            <td><input type="number" name="{{ fila.seleccion }}_gf" value="{{ fila.gf }}" min="0"></td>
+            <td><input type="number" name="{{ fila.seleccion }}_gc" value="{{ fila.gc }}" min="0"></td>
+            <td><input type="number" name="{{ fila.seleccion }}_pts" value="{{ fila.pts }}" min="0"></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <button type="submit" class="btn btn-dorado" style="margin-top:12px; width:auto; padding:10px 18px;">Guardar Grupo {{ grupo.grupo }}</button>
+  </form>
+</div>
+{% endfor %}
+
+<a class="btn btn-secundario" style="margin-top:4px; text-align:center; display:block;" href="{{ url_for('admin.dashboard') }}">← Volver al panel</a>
+
+{% endblock %}

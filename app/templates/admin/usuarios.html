@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Usuarios{% endblock %}
+{% block telefono_clase %}admin{% endblock %}
+{% block contenido %}
+
+<div class="admin-barra">
+  <h2>🧑‍💻 Usuarios registrados</h2>
+</div>
+
+<div class="card" style="overflow-x:auto;">
+  {% if usuarios %}
+  <table class="admin-tabla">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Usuario</th>
+        <th>Correo</th>
+        <th>Rol</th>
+        <th class="acciones">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in usuarios %}
+      <tr>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.usuario }}</td>
+        <td>{{ u.correo }}</td>
+        <td>
+          {% if u.get('es_admin') %}
+          <span class="badge badge-dorado">Administrador</span>
+          {% else %}
+          <span class="badge">Usuario</span>
+          {% endif %}
+        </td>
+        <td class="acciones">
+          <form method="POST" action="{{ url_for('admin.toggle_admin', usuario_id=u._id_str) }}" style="display:inline;"
+                onsubmit="return confirm('{{ '¿Quitarle' if u.get('es_admin') else '¿Darle' }} el rol de administrador a {{ u.nombre }}?');">
+            <button type="submit" class="{{ 'admin-off' if u.get('es_admin') else 'admin-on' }}">
+              {{ 'Quitar admin' if u.get('es_admin') else 'Hacer admin' }}
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="texto-tenue" style="margin:0;">Todavia no hay usuarios registrados.</p>
+  {% endif %}
+</div>
+
+<a class="btn btn-secundario" style="margin-top:14px; text-align:center; display:block;" href="{{ url_for('admin.dashboard') }}">← Volver al panel</a>
+
+{% endblock %}

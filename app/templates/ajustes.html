@@ -45,6 +45,12 @@
     <div>🎯 Mi Quiniela</div><div class="texto-tenue">›</div>
   </a>
 
+  {% if usuario and usuario.get('es_admin') %}
+  <a href="{{ url_for('admin.dashboard') }}" class="fila" style="color:var(--verde); text-decoration:none;">
+    <div>🛠️ Panel de administrador</div><div class="texto-tenue">›</div>
+  </a>
+  {% endif %}
+
   <a href="{{ url_for('extras.zona_18') }}" class="fila" style="color:var(--rosa); text-decoration:none;">
     <div>🔞 Zona +18</div><div class="texto-tenue">›</div>
   </a>

@@ -407,3 +407,89 @@ td:first-child, th:first-child { padding-left: 2px; }
 .texto-centro { text-align: center; }
 .texto-tenue { color: var(--texto-tenue); }
 .mt-0 { margin-top: 0; }
+
+/* ---------------------------------------------------------------------
+   Panel de administrador
+--------------------------------------------------------------------- */
+.telefono.admin { max-width: 900px; }
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+}
+.admin-tile {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--azul-tarjeta);
+  border: 1px solid var(--azul-borde);
+  border-radius: var(--radio);
+  padding: 16px;
+  text-align: center;
+}
+.admin-tile .icono { font-size: 26px; display: block; margin-bottom: 6px; }
+.admin-tile .titulo { font-weight: 700; font-size: 13px; }
+.admin-tile .total { color: var(--dorado); font-size: 12px; margin-top: 4px; }
+
+.admin-barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.admin-barra h2 { margin: 0; font-size: 18px; }
+
+.admin-tabla { width: 100%; border-collapse: collapse; font-size: 13px; }
+.admin-tabla th {
+  text-align: left;
+  color: var(--texto-tenue);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--azul-borde);
+}
+.admin-tabla td {
+  padding: 10px;
+  border-bottom: 1px solid var(--azul-borde);
+  vertical-align: middle;
+}
+.admin-tabla tr:last-child td { border-bottom: none; }
+.admin-tabla .acciones { white-space: nowrap; text-align: right; }
+.admin-tabla .acciones a, .admin-tabla .acciones button {
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+.admin-tabla .acciones a { color: var(--azul-boton); }
+.admin-tabla .acciones button.eliminar { color: var(--rojo); }
+.admin-tabla .acciones button.admin-on { color: var(--verde); }
+.admin-tabla .acciones button.admin-off { color: var(--texto-tenue); }
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0 16px;
+}
+.campo-check { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.campo-check input { width: 18px; height: 18px; }
+.campo-check label { margin: 0; color: var(--texto); font-weight: 500; font-size: 14px; }
+
+.admin-grupo-tabla { overflow-x: auto; }
+.admin-grupo-tabla input[type="number"] {
+  width: 52px;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--azul-borde);
+  background: var(--azul-medio);
+  color: var(--texto);
+  text-align: center;
+}

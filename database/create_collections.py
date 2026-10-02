@@ -24,13 +24,29 @@ duplicados.
 
 import os
 import sys
+from datetime import datetime
 
 # Permite ejecutar este archivo directamente (python database/create_collections.py)
 # sin errores de import, sin importar desde donde se llame.
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from werkzeug.security import generate_password_hash
+
 from app.database import get_db, check_connection
 from database import seed_data as data
+
+# ---------------------------------------------------------------------------
+# Administrador fijo: esta cuenta siempre existe para poder entrar al panel
+# de administrador (/admin) sin tener que registrar y luego promover a nadie.
+# Puedes cambiar estos valores poniendo ADMIN_USUARIO / ADMIN_CORREO /
+# ADMIN_CONTRASENA en tu archivo .env; si no los pones, se usan estos por
+# defecto. *** Cambia la contraseña despues de tu primer inicio de sesion
+# (Ajustes -> Perfil) o definela tu mismo en el .env antes de correr esto. ***
+# ---------------------------------------------------------------------------
+ADMIN_USUARIO = os.environ.get("ADMIN_USUARIO", "admin")
+ADMIN_CORREO = os.environ.get("ADMIN_CORREO", "admin@copamundial2027.com")
+ADMIN_CONTRASENA = os.environ.get("ADMIN_CONTRASENA", "Mundial2027!")
+ADMIN_NOMBRE = os.environ.get("ADMIN_NOMBRE", "Administrador")
 
 
 def crear_indices(db):
@@ -49,6 +65,38 @@ def cargar_coleccion(db, nombre_coleccion, documentos):
     if documentos:
         coleccion.insert_many(documentos)
     print(f"  -> Coleccion '{nombre_coleccion}': {len(documentos)} documentos insertados.")
+
+
+def asegurar_admin_fijo(db):
+    """
+    Garantiza que siempre exista una cuenta de administrador, sin importar
+    cuantas veces se corra este script. Si la cuenta no existe, la crea; si
+    ya existe (por ejemplo porque ya le cambiaste la contraseña desde la
+    app), solo nos aseguramos de que su rol siga siendo administrador, sin
+    tocar su contraseña ni sus demas datos.
+    """
+    existente = db.usuarios.find_one({"usuario": ADMIN_USUARIO})
+
+    if existente:
+        if not existente.get("es_admin"):
+            db.usuarios.update_one({"_id": existente["_id"]}, {"$set": {"es_admin": True}})
+        print(f"  -> Administrador fijo '{ADMIN_USUARIO}' ya existia (se conserva su contraseña actual).")
+        return
+
+    db.usuarios.insert_one({
+        "nombre": ADMIN_NOMBRE,
+        "correo": ADMIN_CORREO,
+        "usuario": ADMIN_USUARIO,
+        "contrasena_hash": generate_password_hash(ADMIN_CONTRASENA),
+        "fecha_nacimiento": "1990-01-01",
+        "creado_en": datetime.utcnow(),
+        "notificaciones_activadas": True,
+        "idioma": "es",
+        "tema": "oscuro",
+        "es_admin": True,
+    })
+    print(f"  -> Administrador fijo creado -> usuario: '{ADMIN_USUARIO}'  contraseña: '{ADMIN_CONTRASENA}'")
+    print("     (Cambiala despues de tu primer inicio de sesion, en Ajustes -> Perfil.)")
 
 
 def main():
@@ -76,11 +124,14 @@ def main():
     cargar_coleccion(db, "quiz_preguntas", data.QUIZ_PREGUNTAS)
     cargar_coleccion(db, "datos_generales", [data.DATOS_GENERALES])
 
-    # La coleccion de usuarios se deja vacia; se llena cuando la gente se registra
-    # en la app (pantalla "Registrarse"). Solo nos aseguramos de que exista.
+    # La coleccion de usuarios NO se borra: se llena cuando la gente se
+    # registra en la app (pantalla "Registrarse"), y aqui solo garantizamos
+    # que exista y que la cuenta fija de administrador este presente.
     if "usuarios" not in db.list_collection_names():
         db.create_collection("usuarios")
-    print("  -> Coleccion 'usuarios' lista (vacia, se llena con los registros).")
+    print("  -> Coleccion 'usuarios' lista (se conserva entre ejecuciones).")
+
+    asegurar_admin_fijo(db)
 
     # La coleccion de predicciones (quiniela) tambien se llena solo cuando la
     # gente pronostica marcadores. Aqui solo nos aseguramos de que exista.

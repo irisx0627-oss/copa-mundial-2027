@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo_barra %}{{ 'Agregar' if accion == 'nuevo' else 'Editar' }} — {{ config.titulo }}{% endblock %}
+{% block telefono_clase %}admin{% endblock %}
+{% block contenido %}
+
+<div class="card">
+  <h3 class="mt-0">{{ 'Agregar nuevo registro' if accion == 'nuevo' else 'Editar registro' }}</h3>
+
+  <form method="POST">
+    <div class="admin-form-grid">
+      {% for campo, etiqueta, tipo, requerido in config.campos %}
+      <div>
+        {% if tipo == "bool" %}
+        <div class="campo-check">
+          <input type="checkbox" id="{{ campo }}" name="{{ campo }}"
+                 {% if documento and documento.get(campo) %}checked{% endif %}>
+          <label for="{{ campo }}">{{ etiqueta }}</label>
+        </div>
+        {% else %}
+        <div class="campo">
+          <label for="{{ campo }}">{{ etiqueta }}{% if requerido %} *{% endif %}</label>
+          {% set valor = documento.get(campo) if documento else None %}
+          <input
+            type="{{ 'number' if tipo == 'int' else 'text' }}"
+            id="{{ campo }}" name="{{ campo }}"
+            {% if requerido %}required{% endif %}
+            value="{% if valor is not none %}{% if tipo == 'lista' %}{{ valor | join(', ') }}{% else %}{{ valor }}{% endif %}{% endif %}">
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-dorado" style="margin-top:6px;">
+      {{ 'Agregar' if accion == 'nuevo' else 'Guardar cambios' }}
+    </button>
+  </form>
+</div>
+
+<a class="btn btn-secundario" style="margin-top:14px; text-align:center; display:block;" href="{{ url_for('admin.lista', slug=slug) }}">← Cancelar y volver a la lista</a>
+
+{% endblock %}

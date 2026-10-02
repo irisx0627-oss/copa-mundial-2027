@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div class="telefono" data-theme="{{ session.get('tema', 'oscuro') }}">
+  <div class="telefono {% block telefono_clase %}{% endblock %}" data-theme="{{ session.get('tema', 'oscuro') }}">
 
     {% if mostrar_topbar | default(true) %}
     <div class="topbar">

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo_barra %}{{ config.titulo }}{% endblock %}
+{% block telefono_clase %}admin{% endblock %}
+{% block contenido %}
+
+<div class="admin-barra">
+  <h2>{{ config.icono }} {{ config.titulo }}</h2>
+  <a class="btn btn-dorado" style="width:auto; padding:10px 18px;" href="{{ url_for('admin.nuevo', slug=slug) }}">+ Agregar nuevo</a>
+</div>
+
+<div class="card" style="overflow-x:auto;">
+  {% if documentos %}
+  <table class="admin-tabla">
+    <thead>
+      <tr>
+        {% for _campo, etiqueta in columnas_info %}
+        <th>{{ etiqueta }}</th>
+        {% endfor %}
+        <th class="acciones">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for doc in documentos %}
+      <tr>
+        {% for campo, _etiqueta in columnas_info %}
+        <td>
+          {% set valor = doc.get(campo) %}
+          {% if valor is sameas true %}Si{% elif valor is sameas false %}No
+          {% elif valor is none or valor == "" %}<span class="texto-tenue">—</span>
+          {% elif valor is iterable and valor is not string %}{{ valor | join(", ") }}
+          {% else %}{{ valor }}{% endif %}
+        </td>
+        {% endfor %}
+        <td class="acciones">
+          <a href="{{ url_for('admin.editar', slug=slug, doc_id=doc._id_str) }}">Editar</a>
+          <form method="POST" action="{{ url_for('admin.eliminar', slug=slug, doc_id=doc._id_str) }}"
+                style="display:inline;" onsubmit="return confirm('¿Eliminar este registro? Esta accion no se puede deshacer.');">
+            <button type="submit" class="eliminar">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="texto-tenue" style="margin:0;">Todavia no hay registros en {{ config.titulo }}.</p>
+  {% endif %}
+</div>
+
+<a class="btn btn-secundario" style="margin-top:14px; text-align:center; display:block;" href="{{ url_for('admin.dashboard') }}">← Volver al panel</a>
+
+{% endblock %}
