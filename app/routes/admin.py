@@ -16,17 +16,55 @@ Administrador fijo:
     siempre quede alguien con acceso al panel.
 """
 
+import os
+import uuid
 from functools import wraps
 
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash, abort
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, abort, current_app
+from werkzeug.utils import secure_filename
 
 from app.database import get_db
 from database.seed_data import BANDERAS, url_bandera
 from database.create_collections import ADMIN_USUARIO
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
+
+# ---------------------------------------------------------------------------
+# Subida de imagenes: permite elegir un archivo de la computadora en vez de
+# tener que pegar una URL. El archivo se guarda dentro de
+# app/static/uploads/<coleccion>/ y en la base solo se guarda la ruta
+# (ej. /static/uploads/jugadores/abc123.jpg).
+#
+# Importante (plan gratuito de Render): el disco no es permanente. Las
+# imagenes subidas se conservan mientras el servicio siga corriendo, pero se
+# pueden perder si se vuelve a desplegar la app (nuevo "git push"). Para
+# fotos que quieras que nunca se borren, sigue usando una URL de internet.
+# ---------------------------------------------------------------------------
+EXTENSIONES_PERMITIDAS = {"png", "jpg", "jpeg", "gif", "webp"}
+
+
+def _extension_valida(nombre_archivo):
+    return "." in nombre_archivo and nombre_archivo.rsplit(".", 1)[1].lower() in EXTENSIONES_PERMITIDAS
+
+
+def _guardar_imagen(slug, archivo):
+    """Guarda el archivo subido y regresa la URL publica para guardarla en Mongo."""
+    if not archivo or not archivo.filename:
+        return None
+    if not _extension_valida(archivo.filename):
+        flash("Ese tipo de archivo no es una imagen valida (usa jpg, jpeg, png, gif o webp).")
+        return None
+
+    extension = archivo.filename.rsplit(".", 1)[1].lower()
+    nombre_seguro = f"{uuid.uuid4().hex}.{extension}"
+
+    carpeta = os.path.join(current_app.static_folder, "uploads", slug)
+    os.makedirs(carpeta, exist_ok=True)
+    archivo.save(os.path.join(carpeta, nombre_seguro))
+
+    return f"/static/uploads/{slug}/{nombre_seguro}"
 
 
 # ---------------------------------------------------------------------------
@@ -67,7 +105,7 @@ COLECCIONES = {
             ("grupo", "Grupo (A-L)", "text", True),
             ("confederacion", "Confederacion", "text", False),
             ("bandera", "Bandera (emoji, opcional)", "text", False),
-            ("bandera_url", "URL de la bandera (opcional, se autocompleta)", "text", False),
+            ("bandera_url", "Imagen de la bandera (opcional, se autocompleta si la dejas vacia)", "imagen", False),
             ("favorito", "Marcar como favorito", "bool", False),
         ],
     },
@@ -83,7 +121,7 @@ COLECCIONES = {
             ("numero", "Numero", "int", False),
             ("edad", "Edad", "int", False),
             ("destacado", "Jugador destacado", "bool", False),
-            ("foto_url", "URL de foto (opcional)", "text", False),
+            ("foto_url", "Foto del jugador (opcional)", "imagen", False),
         ],
     },
     "partidos": {
@@ -179,7 +217,7 @@ def _coleccion_o_404(slug):
     return config
 
 
-def _leer_formulario(config):
+def _leer_formulario(slug, config, documento_actual=None):
     """Convierte los datos del formulario POST en un documento listo para Mongo."""
     doc = {}
     for nombre, _etiqueta, tipo, _requerido in config["campos"]:
@@ -191,6 +229,16 @@ def _leer_formulario(config):
         elif tipo == "lista":
             valor = request.form.get(nombre, "")
             doc[nombre] = [v.strip() for v in valor.split(",") if v.strip()]
+        elif tipo == "imagen":
+            archivo = request.files.get(nombre)
+            url_nueva = _guardar_imagen(slug, archivo)
+            if url_nueva:
+                doc[nombre] = url_nueva
+            elif documento_actual and documento_actual.get(nombre):
+                # No se subio un archivo nuevo: conserva la imagen que ya tenia.
+                doc[nombre] = documento_actual.get(nombre)
+            else:
+                doc[nombre] = ""
         else:
             doc[nombre] = request.form.get(nombre, "").strip()
     return doc
@@ -269,7 +317,7 @@ def nuevo(slug):
     db = get_db()
 
     if request.method == "POST":
-        doc = _leer_formulario(config)
+        doc = _leer_formulario(slug, config)
         doc = _autocompletar_banderas(slug, doc)
         db[slug].insert_one(doc)
         flash(f"Se agrego un nuevo registro en {config['titulo']}.")
@@ -292,7 +340,8 @@ def editar(slug, doc_id):
         abort(404)
 
     if request.method == "POST":
-        doc = _leer_formulario(config)
+        documento_actual = db[slug].find_one({"_id": oid})
+        doc = _leer_formulario(slug, config, documento_actual=documento_actual)
         doc = _autocompletar_banderas(slug, doc)
         db[slug].update_one({"_id": oid}, {"$set": doc})
         flash(f"Registro actualizado en {config['titulo']}.")

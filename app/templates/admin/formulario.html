@@ -6,7 +6,7 @@
 <div class="card">
   <h3 class="mt-0">{{ 'Agregar nuevo registro' if accion == 'nuevo' else 'Editar registro' }}</h3>
 
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     <div class="admin-form-grid">
       {% for campo, etiqueta, tipo, requerido in config.campos %}
       <div>
@@ -15,6 +15,18 @@
           <input type="checkbox" id="{{ campo }}" name="{{ campo }}"
                  {% if documento and documento.get(campo) %}checked{% endif %}>
           <label for="{{ campo }}">{{ etiqueta }}</label>
+        </div>
+        {% elif tipo == "imagen" %}
+        <div class="campo">
+          <label for="{{ campo }}">{{ etiqueta }}{% if requerido %} *{% endif %}</label>
+          {% set valor = documento.get(campo) if documento else None %}
+          {% if valor %}
+          <div style="margin-bottom:8px;">
+            <img src="{{ valor }}" alt="{{ etiqueta }}" style="max-width:90px; max-height:90px; border-radius:8px; display:block; margin-bottom:4px;">
+            <span class="texto-tenue" style="font-size:12px;">Imagen actual. Elige otro archivo para reemplazarla, o deja esto vacio para conservarla.</span>
+          </div>
+          {% endif %}
+          <input type="file" id="{{ campo }}" name="{{ campo }}" accept="image/png, image/jpeg, image/gif, image/webp">
         </div>
         {% else %}
         <div class="campo">
