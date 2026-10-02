@@ -18,11 +18,22 @@ def _resultado(goles_local, goles_visitante):
     return "E"
 
 
-def calcular_puntos(prediccion_local, prediccion_visitante, marcador_real):
+def calcular_puntos(prediccion_local, prediccion_visitante, marcador_real, estado_manual=None):
     """
     marcador_real: string tipo "2-1" (como se guarda en la coleccion 'partidos').
-    Devuelve (puntos, es_exacto) o (None, None) si el partido no se ha jugado.
+    estado_manual: si el administrador decidio el resultado de este pronostico a mano
+        (porque el partido aun no tiene marcador real, por ejemplo), puede ser:
+        "exacto" (acerto el marcador exacto), "resultado" (acerto quien gana/empate,
+        pero no el marcador), "no" (no acerto), o None (usar el calculo automatico).
+    Devuelve (puntos, es_exacto) o (None, None) si no hay forma de saber el resultado.
     """
+    if estado_manual == "exacto":
+        return PUNTOS_MARCADOR_EXACTO, True
+    if estado_manual == "resultado":
+        return PUNTOS_RESULTADO_CORRECTO, False
+    if estado_manual == "no":
+        return 0, False
+
     if not marcador_real:
         return None, None
 

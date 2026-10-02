@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Calificar pronosticos{% endblock %}
+{% block telefono_clase %}admin{% endblock %}
+{% block contenido %}
+
+<div class="card">
+  <h3 class="mt-0">{{ partido.local }} vs {{ partido.visitante }}</h3>
+  <p class="texto-tenue" style="margin-top:-8px;">
+    {{ partido.fecha }} {{ partido.hora or '' }} ·
+    {% if partido.marcador %}Marcador real: {{ partido.marcador }}{% else %}Sin marcador real capturado todavia{% endif %}
+  </p>
+
+  <p class="texto-tenue">
+    Para cada pronostico elige si gano el marcador exacto (3 pts), si solo acerto el
+    resultado — quien gana o si empatan — (1 pt), o si no acerto (0 pts). Si dejas
+    "Automatico", se calculara solo comparando contra el marcador real del partido
+    (y si el partido no tiene marcador real, se queda pendiente).
+  </p>
+
+  {% if filas %}
+  <form method="POST">
+    <div style="overflow-x:auto;">
+      <table class="admin-tabla">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Pronostico</th>
+            <th>Resultado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in filas %}
+          <tr>
+            <td>{{ f.usuario_nombre }}</td>
+            <td>{{ f.prediccion }}</td>
+            <td>
+              <div class="campo" style="margin-bottom:0;">
+                <select name="estado_{{ f.id }}">
+                  <option value="automatico" {% if f.estado_actual == "automatico" %}selected{% endif %}>Automatico (segun marcador real)</option>
+                  <option value="exacto" {% if f.estado_actual == "exacto" %}selected{% endif %}>🎯 Marcador exacto (3 pts)</option>
+                  <option value="resultado" {% if f.estado_actual == "resultado" %}selected{% endif %}>✅ Acerto el resultado (1 pt)</option>
+                  <option value="no" {% if f.estado_actual == "no" %}selected{% endif %}>❌ No acerto (0 pts)</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <button type="submit" class="btn btn-dorado" style="margin-top:14px; width:auto; padding:10px 18px;">Guardar calificaciones</button>
+  </form>
+  {% else %}
+  <p class="texto-tenue" style="margin-bottom:0;">Nadie ha hecho un pronostico para este partido todavia.</p>
+  {% endif %}
+</div>
+
+<a class="btn btn-secundario" style="margin-top:14px; text-align:center; display:block;" href="{{ url_for('admin.quiniela_partidos') }}">← Volver a partidos</a>
+
+{% endblock %}

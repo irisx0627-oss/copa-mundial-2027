@@ -51,7 +51,7 @@
   </div>
   <p class="partido-meta">
     {% if f.jugado %}
-      Resultado real: {{ f.partido.marcador }} ·
+      {% if f.partido.marcador %}Resultado real: {{ f.partido.marcador }} · {% endif %}
       {% if f.puntos == 3 %}<span style="color:var(--dorado); font-weight:700;">¡Exacto! +3 pts</span>
       {% elif f.puntos == 1 %}<span style="color:var(--verde); font-weight:700;">Acertaste el resultado, +1 pt</span>
       {% else %}<span class="texto-tenue">Sin puntos esta vez</span>{% endif %}

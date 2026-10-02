@@ -81,7 +81,10 @@ def obtener_resumen_quiniela(usuario_id):
         if not partido:
             continue
 
-        puntos, exacto = calcular_puntos(pred["goles_local"], pred["goles_visitante"], partido.get("marcador"))
+        estado_manual = pred.get("estado_manual")
+        puntos, exacto = calcular_puntos(
+            pred["goles_local"], pred["goles_visitante"], partido.get("marcador"), estado_manual
+        )
         if puntos:
             puntos_totales += puntos
 
@@ -90,7 +93,7 @@ def obtener_resumen_quiniela(usuario_id):
             "prediccion": f'{pred["goles_local"]}-{pred["goles_visitante"]}',
             "puntos": puntos,
             "exacto": exacto,
-            "jugado": partido.get("marcador") is not None,
+            "jugado": partido.get("marcador") is not None or estado_manual is not None,
         })
 
     insignias_ganadas = calcular_insignias(puntos_totales, len(predicciones))

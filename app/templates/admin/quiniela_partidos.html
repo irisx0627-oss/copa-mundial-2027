@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo_barra %}Quiniela — Partidos{% endblock %}
+{% block telefono_clase %}admin{% endblock %}
+{% block contenido %}
+
+<p class="texto-tenue" style="margin-top:0;">
+  Elige un partido para ver quien pronostico y decidir si cada pronostico gano puntos
+  (marcador exacto, solo el resultado, o nada) — util mientras el partido todavia no
+  tiene un marcador real capturado.
+</p>
+
+<div class="card" style="overflow-x:auto;">
+  {% if partidos %}
+  <table class="admin-tabla">
+    <thead>
+      <tr>
+        <th>Partido</th>
+        <th>Fecha</th>
+        <th>Marcador</th>
+        <th>Pronosticos</th>
+        <th class="acciones">Accion</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in partidos %}
+      <tr>
+        <td>{{ p.local }} vs {{ p.visitante }}</td>
+        <td>{{ p.fecha }} {{ p.hora or '' }}</td>
+        <td>
+          {% if p.marcador %}{{ p.marcador }}{% else %}<span class="texto-tenue">Sin jugar</span>{% endif %}
+        </td>
+        <td>{{ p.total_predicciones }}</td>
+        <td class="acciones">
+          <a href="{{ url_for('admin.quiniela_predicciones', partido_id=p._id_str) }}">Calificar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="texto-tenue" style="margin:0;">Todavia no hay partidos cargados.</p>
+  {% endif %}
+</div>
+
+<a class="btn btn-secundario" style="margin-top:14px; text-align:center; display:block;" href="{{ url_for('admin.dashboard') }}">← Volver al panel</a>
+
+{% endblock %}

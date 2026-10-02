@@ -428,6 +428,55 @@ def usuarios():
     return render_template("admin/usuarios.html", usuarios=usuarios)
 
 
+@admin_bp.route("/quiniela")
+@admin_requerido
+def quiniela_partidos():
+    db = get_db()
+    partidos = list(db.partidos.find().sort([("fecha", 1), ("hora", 1)]))
+    for p in partidos:
+        p["_id_str"] = str(p["_id"])
+        p["total_predicciones"] = db.predicciones.count_documents({"partido_id": p["_id_str"]})
+    return render_template("admin/quiniela_partidos.html", partidos=partidos)
+
+
+@admin_bp.route("/quiniela/<partido_id>", methods=["GET", "POST"])
+@admin_requerido
+def quiniela_predicciones(partido_id):
+    db = get_db()
+    try:
+        oid = ObjectId(partido_id)
+    except InvalidId:
+        abort(404)
+    partido = db.partidos.find_one({"_id": oid})
+    if not partido:
+        abort(404)
+
+    if request.method == "POST":
+        predicciones = list(db.predicciones.find({"partido_id": partido_id}))
+        for pred in predicciones:
+            valor = request.form.get(f"estado_{pred['_id']}", "automatico")
+            nuevo_estado = None if valor == "automatico" else valor
+            db.predicciones.update_one({"_id": pred["_id"]}, {"$set": {"estado_manual": nuevo_estado}})
+        flash(f"Se guardaron los resultados de {partido.get('local')} vs {partido.get('visitante')}.")
+        return redirect(url_for("admin.quiniela_predicciones", partido_id=partido_id))
+
+    predicciones = list(db.predicciones.find({"partido_id": partido_id}))
+    ids_validos = [ObjectId(p["usuario_id"]) for p in predicciones if ObjectId.is_valid(p.get("usuario_id", ""))]
+    usuarios_map = {str(u["_id"]): u for u in db.usuarios.find({"_id": {"$in": ids_validos}})}
+
+    filas = []
+    for pred in predicciones:
+        usuario = usuarios_map.get(pred.get("usuario_id"))
+        filas.append({
+            "id": str(pred["_id"]),
+            "usuario_nombre": usuario["nombre"] if usuario else "(usuario eliminado)",
+            "prediccion": f'{pred["goles_local"]}-{pred["goles_visitante"]}',
+            "estado_actual": pred.get("estado_manual") or "automatico",
+        })
+
+    return render_template("admin/quiniela_predicciones.html", partido=partido, filas=filas)
+
+
 @admin_bp.route("/usuarios/<usuario_id>/admin/toggle", methods=["POST"])
 @admin_requerido
 def toggle_admin(usuario_id):
